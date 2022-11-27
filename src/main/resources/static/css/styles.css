@@ -1,0 +1,21 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.btn-outline-info{
+    --bs-btn-border-color: #212529;
+}
+.all-containers{
+    max-width: 100vw;
+}
+@media only screen and (min-width: 300px) and (max-width:767px){
+    .all-containers{
+        max-width: 60vw;
+    }
+    .container-responsive{
+        width: 60vw;
+        overflow: hidden;
+        overflow-x: scroll;
+    }
+}
