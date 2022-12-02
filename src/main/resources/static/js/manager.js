@@ -17,6 +17,7 @@ const app = createApp({
             modifyAttribute: '',
             attribute: '',
             fnModify: '',
+            accounts: [],
         }
     },
     created() {
@@ -27,17 +28,39 @@ const app = createApp({
     },
     methods: {
         getData() {
-            axios.get("http://localhost:8080/clients")
+            axios.get("http://localhost:8080/rest/clients")
                 .then(response => {
                     this.data = response.data
+                    console.log("todo correcto 2")
                     return this.data
                 })
                 .then(data => {
+                    console.log("todo correcto 43")
                     this.clients = data._embedded.clients
-                    console.log(data);
-                    console.log(this.clients);
                 })
                 .catch(error => console.error(error))
+        },
+        deleteAccounts(client) {
+            axios.get(client._links.accounts.href)
+                .then(response => response)
+                .then(data => {
+                    this.accounts = data.data._embedded.accounts;
+                    console.log(this.accounts.length);
+                    if (this.accounts.length === 0) {
+                        console.log("entre a un usuario sin cuentas")
+                        this.deleteClient(client)
+                    } else if (this.accounts.length > 0) {
+                        console.log("entre a borrar todo")
+                        this.accounts.forEach(element => {
+                            axios.delete(element._links.self.href)
+                                .then(res => res)
+                                .then(res => this.deleteClient(client))
+                                .catch(error => console.error(error))
+                        });
+                    }
+
+                })
+                .catch(error => console.log(error))
         },
         createClient() {
             if (this.email.toLowerCase().includes(".com") && this.email.includes("@")) {
@@ -50,13 +73,18 @@ const app = createApp({
             }
         },
         postClient(client) {
-            axios.post("http://localhost:8080/clients", client)
+            axios.post("http://localhost:8080/rest/clients", client)
                 .then(res => this.getData())
                 .catch(error => console.error(error))
         },
         deleteClient(client) {
             axios.delete(client._links.client.href)
-                .then(res => this.getData())
+                .then(res => res)
+                .then(res => {
+                    console.log("todo correcto");
+                    this.getData()
+                    console.log("todo correcto 10000");
+                })
                 .catch(error => console.error(error))
         },
         clientActual(client) {
@@ -106,30 +134,34 @@ const app = createApp({
         },
         nameModify(client) {
             if (this.attribute === 'Name') {
-                axios.patch(client._links.client.href, {name: this.modifyAttribute})
+                axios.patch(client._links.client.href, { name: this.modifyAttribute })
                     .then(res => {
                         this.attribute = '';
                         this.modifyAttribute = '';
-                        this.getData()})
+                        this.getData()
+                    })
                     .catch(error => console.error(error))
             } else if (this.attribute === 'Surname') {
-                axios.patch(client._links.client.href, {surname: this.modifyAttribute})
+                axios.patch(client._links.client.href, { surname: this.modifyAttribute })
                     .then(res => {
                         this.attribute = '';
                         this.modifyAttribute = '';
-                        this.getData()})
+                        this.getData()
+                    })
                     .catch(error => console.error(error))
             } else if (this.attribute === 'Email') {
                 if (this.modifyAttribute.toLowerCase().includes(".com") && this.modifyAttribute.includes("@")) {
-                    axios.patch(client._links.client.href, {email: this.modifyAttribute})
+                    axios.patch(client._links.client.href, { email: this.modifyAttribute })
                         .then(res => {
                             this.attribute = '';
                             this.modifyAttribute = '';
-                            this.getData()})
+                            this.getData()
+                        })
                         .catch(error => console.error(error))
                 }
             }
         },
+
 
     },
     computed: {

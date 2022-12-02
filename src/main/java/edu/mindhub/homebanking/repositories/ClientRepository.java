@@ -20,13 +20,14 @@ public interface ClientRepository extends JpaRepository <Client,Long>{
     void delete(Client entity);
 
     @Override
+    List<Client> findAll();
+
+    @Override
     List<Client> findAll(Sort sort);
 
     @Override
     Optional<Client> findById(Long aLong);
 
-    @Override
-    List<Client> findAll();
 
     @Override
     <S extends Client> S save(S entity);
@@ -36,7 +37,5 @@ public interface ClientRepository extends JpaRepository <Client,Long>{
 
     @Override
     <S extends Client> Optional<S> findOne(Example<S> example);
-
-
 
 }
