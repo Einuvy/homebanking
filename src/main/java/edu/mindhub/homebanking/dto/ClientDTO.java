@@ -1,49 +1,58 @@
 package edu.mindhub.homebanking.dto;
 
-import edu.mindhub.homebanking.entities.Client;
+import edu.mindhub.homebanking.models.Client;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ClientDTO {
 
     private long id;
-    private String name;
-    private String surname;
+    private String firstName;
+    private String lastName;
     private String email;
 
-    private Set<AccountDTO> accounts = new HashSet<>();
+    private List<AccountDTO> accounts;
 
-    public ClientDTO() {
-    }
+    private List<ClientLoanDTO> loans;
+
+    private List<CardDTO> cards;
 
     public ClientDTO(Client client) {
         this.id = client.getId();
-        this.name = client.getName();
-        this.surname = client.getSurname();
+        this.firstName = client.getFirstName();
+        this.lastName = client.getLastName();
         this.email = client.getEmail();
-        this.accounts = client.getAccounts().stream().map(account -> new AccountDTO(account)).collect(Collectors.toSet());
+        this.accounts = client.getAccounts().stream().map(account -> new AccountDTO(account)).collect(Collectors.toList());
+        this.loans = client.getClientLoans().stream().map(clientLoan -> new ClientLoanDTO(clientLoan)).collect(Collectors.toList());
+        this.cards = client.getCards().stream().map(card -> new CardDTO(card)).collect(Collectors.toList());
     }
 
     public long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getLastName() {
+        return lastName;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public Set<AccountDTO> getAccounts() {
+    public List<AccountDTO> getAccounts() {
         return accounts;
     }
 
+    public List<ClientLoanDTO> getLoans() {
+        return loans;
+    }
+
+    public List<CardDTO> getCards() {
+        return cards;
+    }
 }

@@ -51,7 +51,7 @@
               </thead>
               <tbody class="tbody-upcoming-container">
                 <tr v-for="client of clients">
-                  <td class="td-container px-3">{{client.name}}</td>
+                  <td class="td-container px-3">{{client.firstName}}</td>
                   <td><button type="button" class="btn btn-outline-info" data-bs-toggle="modal"
                       data-bs-target="#modalAttribute" @click="attributeName(client)"><svg
                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -61,7 +61,7 @@
                         <path fill-rule="evenodd"
                           d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
                       </svg></button></td>
-                  <td class="td-container px-3">{{client.surname}}</td>
+                  <td class="td-container px-3">{{client.lastName}}</td>
                   <td><button type="button" class="btn btn-outline-info" data-bs-toggle="modal"
                       data-bs-target="#modalAttribute" @click="attributeSurname(client)"><svg
                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -104,8 +104,8 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">Edit User: {{actualClient.surname}},
-                    {{actualClient.name}}</h1>
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Edit User: {{actualClient.lastName}},
+                    {{actualClient.firstName}}</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -131,7 +131,7 @@
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                     @click=" reloadForm()">Close</button>
                   <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="clientModify()">Chenge
-                    User {{actualClient.name}}</button>
+                    User {{actualClient.firstName}}</button>
                 </div>
               </div>
             </div>
@@ -142,8 +142,8 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">Edit User: {{actualClient.surname}},
-                    {{actualClient.name}}</h1>
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Edit User: {{actualClient.lastName}},
+                    {{actualClient.firstName}}</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -156,7 +156,7 @@
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                         @click=" reloadForm()">Close</button>
                       <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                        @click="nameModify(actualClient)">Chenge User {{actualClient.name}}</button>
+                        @click="nameModify(actualClient)">Chenge User {{actualClient.firstName}}</button>
                     </div>
                 </div>
               </div>

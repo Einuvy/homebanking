@@ -1,10 +1,12 @@
-package edu.mindhub.homebanking.entities;
+package edu.mindhub.homebanking.models;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
@@ -27,6 +29,10 @@ public class Account{
     @JoinColumn(name="client_id")
     private Client client;
 
+    @OneToMany(mappedBy="account", fetch= EAGER)
+    @Enumerated(EnumType.STRING)
+    private Set<Transaction> transactions = new HashSet<>();
+
     public Account() {
     }
 
@@ -34,6 +40,11 @@ public class Account{
         this.number = number;
         this.creationDate = creationDate;
         this.balance = balance;
+    }
+
+    public void addTransaction(Transaction transaction) {
+        transaction.setAccount(this);
+        transactions.add(transaction);
     }
 
     public long getId() {
@@ -70,6 +81,10 @@ public class Account{
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public Set<Transaction> getTransactions() {
+        return transactions;
     }
 
     @Override
