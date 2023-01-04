@@ -19,6 +19,7 @@ public class Account{
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
+    @Column(unique = true)
     private String number;
 
     private LocalDateTime creationDate;

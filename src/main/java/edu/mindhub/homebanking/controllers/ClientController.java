@@ -58,18 +58,28 @@ public class ClientController {
         }
 
         if (clientRepository.findByEmail(email) !=  null) {
-            return new ResponseEntity<>("Name already in use", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Email already in use", HttpStatus.FORBIDDEN);
         }
 
         Client client = new Client(firstName, lastName, email, passwordEncoder.encode(password));
         clientRepository.save(client);
-        Integer number =(int) ((Math.random() * (99999999 - 1)) + 1);
+
+        Integer number =(int) ((Math.random() * (99999999 - 10000000)) + 10000000);
         String accountNumber = "VIN-" + number.toString();
+        while (accountRepository.findByNumber(accountNumber) != null){
+             number =(int) ((Math.random() * (99999999 - 10000000)) + 10000000);
+             accountNumber = "VIN-" + number.toString();
+        }
 
         Account account = new Account(accountNumber, LocalDateTime.now(), 0D);
         client.addAccount(account);
         accountRepository.save(account);
-        return new ResponseEntity<>("Account Created",HttpStatus.CREATED);
+        return new ResponseEntity<>("Client Created",HttpStatus.CREATED);
+    }
+
+    @RequestMapping("/clients/account/send/{number}")
+    public ClientDTO getSendClient(@PathVariable String number){ //arreglar posible error de null (para mañana)
+        return new ClientDTO(accountRepository.findByNumber(number).getClient());
     }
 
     @RequestMapping("clients/current")

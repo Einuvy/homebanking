@@ -821,7 +821,6 @@ button:active .button_top {
   }
 }
 
-
 @media (min-width: 501px) {
   .sidebar.close~.home {
     left: 78px;
@@ -838,7 +837,22 @@ button:active .button_top {
 body.dark .home .text {
   color: var(--text-color);
 }
-
+.accordion{
+  width: 60% !important;
+}
+.transfers-container{
+  min-height: 95vh;
+  margin: 1rem;
+  background-color: white;
+  border-radius: 20px;
+}
+.input-group-text{
+  background-color: white;
+  border: none;
+}
+.send-btn{
+  width: 100px;
+}
 @media (max-width: 500px) {
   .container {
     flex-direction: column;

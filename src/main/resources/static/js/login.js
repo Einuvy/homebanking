@@ -16,8 +16,6 @@ const app = createApp({
         }
     },
     created() {
-        console.log(this.logout);
-        console.log(this.error);
         if(this.logout != null){
             Toastify({
                 text: "Logout has been successfully",
@@ -34,7 +32,7 @@ const app = createApp({
         }
         if(this.error != null){
             Toastify({
-                text: "Check the data and retry",
+                text: "Error trying to login",
                 duration: 5000,
                 close: true,
                 gravity: "top",

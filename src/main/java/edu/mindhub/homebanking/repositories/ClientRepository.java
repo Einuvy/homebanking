@@ -9,4 +9,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface ClientRepository extends JpaRepository <Client,Long>{
 
     Client findByEmail(String email);
+
+
 }

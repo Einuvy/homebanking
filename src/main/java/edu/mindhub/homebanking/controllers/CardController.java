@@ -49,6 +49,15 @@ public class CardController {
         LocalDateTime creationDate = LocalDateTime.now();
         LocalDateTime expirationDate = LocalDateTime.now().plusYears(5);
 
+        while (cardRepository.findByNumber(cardNumber) != null){
+             cardNumber1 =(int) ((Math.random() * (9999 - 1000)) + 1000);
+             cardNumber2 =(int) ((Math.random() * (9999 - 1000)) + 1000);
+             cardNumber3 =(int) ((Math.random() * (9999 - 1000)) + 1000);
+             cardNumber4 =(int) ((Math.random() * (9999 - 1000)) + 1000);
+
+             cardNumber = cardNumber1.toString() + "-" + cardNumber2.toString() + "-" + cardNumber3.toString() + "-" + cardNumber4.toString();
+        }
+
         Card card = new Card(type, color, cardNumber, cvv, creationDate, expirationDate);
         currentClient.addCard(card);
         cardRepository.save(card);

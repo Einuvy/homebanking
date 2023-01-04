@@ -126,7 +126,6 @@ const app = createApp({
                     return [
                         this.type = document.querySelector('.type').value,
                         this.color = document.querySelector('.color').value,
-                        console.log(this.color + " " + this.type),
                     ]
                 }
             }).then((result) => {
@@ -161,6 +160,23 @@ const app = createApp({
                     })
                 })
         },
+        transactionDetails(transactionDetails){
+            Swal.fire({
+                title: transactionDetails.type,
+                html:`
+                <div>
+                    <p>${transactionDetails.description}</p>
+                    <h4>${transactionDetails.amount}</h4>
+                    <span>${transactionDetails.date}</span>
+                </div>
+                `,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Okay!',
+                customClass: {
+                    popup: "text-white borderRadius-15",
+                }
+            })
+        }
     },
     computed: {
 

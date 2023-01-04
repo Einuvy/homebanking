@@ -72,11 +72,11 @@ public class HomebankingApplication {
 			client3.addAccount(VIN006);
 			accountRepository.save(VIN006);
 
-			Account VIN007 = new Account("VIN003", LocalDateTime.now(), 1d);
+			Account VIN007 = new Account("VIN007", LocalDateTime.now(), 1d);
 			client4.addAccount(VIN007);
 			accountRepository.save(VIN007);
 
-			Account VIN008 = new Account("VIN004", LocalDateTime.now().minusYears(1), 0.50d);
+			Account VIN008 = new Account("VIN008", LocalDateTime.now().minusYears(1), 0.50d);
 			client4.addAccount(VIN008);
 			accountRepository.save(VIN008);
 

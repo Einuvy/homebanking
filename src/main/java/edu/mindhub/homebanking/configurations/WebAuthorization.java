@@ -14,23 +14,21 @@ import javax.servlet.http.HttpSession;
 
 @EnableWebSecurity
 @Configuration
-public class WebAuthorization extends WebSecurityConfigurerAdapter{
+public class WebAuthorization extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //@Formatter
+        //@formatter:off
         http
                 .authorizeRequests()
                     .antMatchers("/rest/**", "/h2-console/**", "/manager.html").hasAuthority("ADMIN")
                     .antMatchers(HttpMethod.GET, "/api/clients").hasAuthority("ADMIN")
-                    .antMatchers("/web/accounts.html", "/web/account.html", "/web/cards.html").hasAuthority("CLIENT")
-                    .antMatchers(HttpMethod.GET, "/api/clients/current").hasAuthority("CLIENT")
-                    .antMatchers(HttpMethod.POST, "/api/clients/current/accounts").hasAuthority("CLIENT")
-                    .antMatchers(HttpMethod.POST, "/api/clients/current/cards").hasAuthority("CLIENT")
+                    .antMatchers("/web/accounts.html", "/web/account.html", "/web/cards.html", "/web/transfers.html").hasAuthority("CLIENT")
+                    .antMatchers(HttpMethod.GET, "/api/clients/current", "/api/clients/account/send/{number}").hasAuthority("CLIENT")
+                    .antMatchers(HttpMethod.POST, "/api/clients/current/cards", "/api/transactions", "/api/clients/current/accounts").hasAuthority("CLIENT")
                     .antMatchers(HttpMethod.POST, "/api/clients").permitAll()
                     .antMatchers("/index.html", "/login.html", "/js/**", "/css/**", "/images/**", "/web/css/**", "/web/js/**", "/web/images/**").permitAll()
                     .anyRequest().denyAll()
-
                 .and()
                 .formLogin()
                     .loginPage("/api/login")
@@ -71,7 +69,9 @@ public class WebAuthorization extends WebSecurityConfigurerAdapter{
                             new HttpStatusReturningLogoutSuccessHandler();
                             response.sendRedirect("/login.html?logout=true");
                         }));
+        //@formatter:on
     }
+
     private void clearAuthenticationAttributes(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {

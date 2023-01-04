@@ -1,5 +1,6 @@
 package edu.mindhub.homebanking.controllers;
 import edu.mindhub.homebanking.dto.AccountDTO;
+import edu.mindhub.homebanking.dto.ClientDTO;
 import edu.mindhub.homebanking.models.Account;
 import edu.mindhub.homebanking.models.Client;
 import edu.mindhub.homebanking.repositories.AccountRepository;
@@ -43,7 +44,7 @@ public class AccountController {
             return new ResponseEntity<>("You already have 3 accounts", HttpStatus.FORBIDDEN);
         }
 
-        Integer number =(int) ((Math.random() * (99999999 - 1)) + 1);
+        Integer number =(int) ((Math.random() * (99999999 - 10000000)) + 10000000);
         String accountNumber = "VIN-" + number.toString();
 
         Account account = new Account(accountNumber, LocalDateTime.now(), 0D);
