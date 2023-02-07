@@ -7,6 +7,9 @@ import edu.mindhub.homebanking.models.Transaction;
 import edu.mindhub.homebanking.repositories.AccountRepository;
 import edu.mindhub.homebanking.repositories.ClientRepository;
 import edu.mindhub.homebanking.repositories.TransactionRepository;
+import edu.mindhub.homebanking.services.implementations.AccountServiceImplementations;
+import edu.mindhub.homebanking.services.implementations.ClientServiceImplementations;
+import edu.mindhub.homebanking.services.implementations.TransactionServiceImplementations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,26 +28,26 @@ import java.time.LocalDateTime;
 public class TransactionController {
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientServiceImplementations clientService;
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountServiceImplementations accountService;
     @Autowired
-    private TransactionRepository transactionRepository;
+    private TransactionServiceImplementations transactionService;
 
 
     @Transactional
     @PostMapping("/transactions")
-    ResponseEntity <Object> addTransaction(Authentication authentication,
+    ResponseEntity <Object> createTransaction(Authentication authentication,
                                      @RequestParam Double amount,
                                      @RequestParam String description,
                                      @RequestParam String numberOrigin,
                                      @RequestParam String numberRecipients){
 
-        Client currentClient =  clientRepository.findByEmail(authentication.getName());
-        Account accountOrigin = accountRepository.findByNumber(numberOrigin);
-        Account accountRecipients = accountRepository.findByNumber(numberRecipients);
+        Client currentClient =  clientService.findByEmail(authentication.getName());
+        Account accountOrigin = accountService.findByNumber(numberOrigin);
+        Account accountRecipients = accountService.findByNumber(numberRecipients);
 
-        if (amount.isNaN() || amount == 0){
+        if (amount.isNaN() || amount <= 0 || amount.isInfinite()){
             return new ResponseEntity<>("Amount field cannot be empty", HttpStatus.FORBIDDEN);
         }else
         if (description.isEmpty()){
@@ -80,11 +83,11 @@ public class TransactionController {
         accountOrigin.setBalance(accountOrigin.getBalance() - amount);
         accountRecipients.setBalance(accountRecipients.getBalance() + amount);
 
-        transactionRepository.save(originTransaction);
-        transactionRepository.save(recipientsTransaction);
+        transactionService.saveTransaction(originTransaction);
+        transactionService.saveTransaction(recipientsTransaction);
 
-        accountRepository.save(accountOrigin);
-        accountRepository.save(accountRecipients);
+        accountService.saveAccount(accountOrigin);
+        accountService.saveAccount(accountRecipients);
 
         return new ResponseEntity<>("Transaction created", HttpStatus.CREATED);
     }

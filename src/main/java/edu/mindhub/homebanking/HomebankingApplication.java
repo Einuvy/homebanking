@@ -1,20 +1,9 @@
 package edu.mindhub.homebanking;
 
-import edu.mindhub.homebanking.enums.CardColor;
-import edu.mindhub.homebanking.enums.CardType;
-import edu.mindhub.homebanking.models.*;
-import edu.mindhub.homebanking.enums.TransactionType;
-import edu.mindhub.homebanking.repositories.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 
 
 @SpringBootApplication
@@ -24,7 +13,7 @@ public class HomebankingApplication {
 		SpringApplication.run(HomebankingApplication.class, args);
 	}
 
-	@Autowired
+	/*@Autowired
 	PasswordEncoder passwordEncoder;
 
 	@Bean
@@ -119,9 +108,9 @@ public class HomebankingApplication {
 			List<Integer> payments1 = Arrays.asList(12,24,36,48,60);
 			List<Integer> payments2 = Arrays.asList(6,12,24);
 			List<Integer> payments3 = Arrays.asList(6,12,24,36);
-			Loan mortgage = new Loan("Mortgage", 500000, payments1);
-			Loan personal = new Loan("Personal", 100000, payments2);
-			Loan automotive = new Loan("Automotive", 300000, payments3);
+			Loan mortgage = new Loan("Mortgage", 500000, payments1, 20);
+			Loan personal = new Loan("Personal", 100000, payments2, 30);
+			Loan automotive = new Loan("Automotive", 300000, payments3, 35);
 			loanRepository.save(mortgage);
 			loanRepository.save(personal);
 			loanRepository.save(automotive);
@@ -132,7 +121,7 @@ public class HomebankingApplication {
 			clientLoanRepository.save(loan1);
 
             ClientLoan loan2 = new ClientLoan(12, 789456, LocalDateTime.now());
-			mortgage.addClientLoan(loan2);
+			personal.addClientLoan(loan2);
             client.addClientLoans(loan2);
             clientLoanRepository.save(loan2);
 
@@ -158,5 +147,5 @@ public class HomebankingApplication {
 			cardRepository.save(card3);
 
 		};
-	}
+	}*/
 }

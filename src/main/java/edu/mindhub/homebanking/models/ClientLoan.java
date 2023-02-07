@@ -1,8 +1,11 @@
 package edu.mindhub.homebanking.models;
 
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 import java.time.LocalDateTime;
 
@@ -10,6 +13,10 @@ import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
+@Table(name = "client_loan")
+@SQLDelete(sql = "UPDATE client_loan SET deleted = true WHERE id = ?")
+@FilterDef(name = "deletedClientLoan", parameters = @ParamDef(name = "deleted", type = "boolean"))
+@Filter(name = "deletedClientLoan", condition = "deleted = :deleted")
 public class ClientLoan {
 
     @Id
@@ -17,11 +24,14 @@ public class ClientLoan {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
-    private int payments;
+    private int payment;
 
     private double amount;
 
     private LocalDateTime date;
+
+    @Column(name = "deleted")
+    private Boolean deleted;
 
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name="client_id")
@@ -34,12 +44,13 @@ public class ClientLoan {
     public ClientLoan() {
     }
 
-    public ClientLoan(int payments,
+    public ClientLoan(int payment,
                       double amount,
                       LocalDateTime date) {
-        this.payments = payments;
+        this.payment = payment;
         this.amount = amount;
         this.date = date;
+        this.deleted = false;
     }
 
     public long getId() {
@@ -47,7 +58,7 @@ public class ClientLoan {
     }
 
     public int getPayments() {
-        return payments;
+        return payment;
     }
 
     public double getAmount() {
@@ -67,7 +78,7 @@ public class ClientLoan {
     }
 
     public void setPayments(int payments) {
-        this.payments = payments;
+        this.payment = payments;
     }
 
     public void setAmount(double amount) {

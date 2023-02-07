@@ -13,6 +13,10 @@ const app = createApp({
             loans: [],
             type: "",
             color: "",
+            loanTopay: "",
+            loanPayAccount: "",
+            loanPayAmount: "",
+            loanSelected: "",
         }
     },
     created() {
@@ -50,10 +54,10 @@ const app = createApp({
                 })
                 .then(data => {
                     let USDollar = new Intl.NumberFormat("en-US",
-                    {
-                        style: "currency",
-                        currency: "USD",
-                    });
+                        {
+                            style: "currency",
+                            currency: "USD",
+                        });
                     this.client = data;
                     this.accounts = this.client.accounts;
                     this.accounts.map(account => account.balance = USDollar.format(account.balance))
@@ -160,14 +164,14 @@ const app = createApp({
                     })
                 })
         },
-        transactionDetails(transactionDetails){
+        transactionDetails(transactionDetails) {
             Swal.fire({
                 title: transactionDetails.type,
-                html:`
+                html: `
                 <div>
-                    <p>${transactionDetails.description}</p>
+                    <p>Description: ${transactionDetails.description}</p>
                     <h4>${transactionDetails.amount}</h4>
-                    <span>${transactionDetails.date}</span>
+                    <span>Date: ${transactionDetails.date}</span>
                 </div>
                 `,
                 confirmButtonColor: '#3085d6',
@@ -176,7 +180,133 @@ const app = createApp({
                     popup: "text-white borderRadius-15",
                 }
             })
-        }
+        },
+        payLoanCuote() {
+            Swal.fire({
+                didOpen: (event) => {
+                    const $selectLoantopay = document.querySelector(".loantopay");
+                    let templateLoan = "<option selected>Select loan...</option>";
+                    this.loans.forEach(loan => templateLoan += `
+                    <option value="${loan.name}">${loan.name}</option>
+                    `);
+                    $selectLoantopay.innerHTML = templateLoan;
+
+                    const $selectPayAccount = document.querySelector(".payaccount");
+                    let template = "<option selected>Pay Account...</option>";
+                    this.accounts.forEach(account => template += `
+                    <option value="${account.number}">${account.number}</option>
+                    `);
+                    $selectPayAccount.innerHTML = template;
+                    document.querySelector('.swal2-confirm').addEventListener("click", () => {
+                        this.areYouSure()
+                    })
+                },
+                title: 'Select loan to pay',
+                html: `
+                <form>
+                <select class="loantopay form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                    <option selected>Select loan</option>
+                </select>
+                <select class="payaccount form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                    <option selected>Select loan</option>
+                </select>
+                </form>
+                `,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Pay a loan payment',
+                customClass: {
+                    popup: "text-white borderRadius-15",
+                },
+                preConfirm: () => {
+                    return [
+                        this.loanSelected = document.querySelector('.loantopay').value,
+                        this.loanPayAccount = document.querySelector(".payaccount").value,
+
+                    ]
+                }
+            }).then((result) => {
+            })
+        },
+        areYouSure() {
+            this.loanTopay = this.loans.filter(loan => loan.name.includes(this.loanSelected))
+            let myAmount = parseFloat(this.loanTopay[0].amount.replace("$", "").replace(",", ""));
+            let myPayments = this.loanTopay[0].payments;
+            this.loanPayAmount = (myAmount / myPayments).toFixed(2)
+            Swal.fire({
+                didOpen: (event) => {
+                    document.querySelector('.swal2-confirm').addEventListener("click", () => {
+                        this.payPayment(this.loanPayAccount, this.loanPayAmount, this.loanTopay[0].id)
+                    })
+                },
+                icon: 'question',
+                title: 'Are you sure?',
+                text: `The account payment is ${this.loanPayAccount}, loan amount is ${this.loanPayAmount}
+                and loan to pay resume is: Name: ${this.loanTopay[0].name} - Payments ${this.loanTopay[0].payments} -  ${this.loanTopay[0].amount}`,
+            })
+        },
+        payPayment(account, amount, id) {
+            axios.post("/api/payloan",
+                "clientLoanId="+id +
+                "&amount="+amount +
+                "&account="+account)
+                .then(response => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thanks to pay!!!',
+                        text: response.data,
+                        customClass: {
+                            popup: "text-white borderRadius-15",
+                        },
+                    })
+                })
+                .catch(error => {
+                    console.log(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: error.response.data,
+                        customClass: {
+                            popup: "text-white borderRadius-15",
+                        },
+                    })
+                })
+        },
+        deleteAccount(number){
+            Swal.fire({
+                didOpen: (event) => {
+                    document.querySelector('.swal2-confirm').addEventListener("click", () => {
+                        console.log(number)
+                        axios.delete("/api/clients/current/account", {
+                            params:{
+                                accountNumber: number
+                            }
+                        })
+                        .then(data => {
+                            console.log(data)
+                            location.reload()
+                        })
+                        /* .then(location.reload()) */
+                        .catch(error => {
+                            console.log(error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: error.response.data,
+                                customClass: {
+                                    popup: "text-white borderRadius-15",
+                                },
+                            })
+                        })
+                    })
+                },
+                icon: 'question',
+                title: 'Are you sure?',
+                text: `Delete account ${number}`,
+            })
+            
+        },
     },
     computed: {
 

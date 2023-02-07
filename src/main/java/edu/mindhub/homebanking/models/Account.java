@@ -1,8 +1,11 @@
 package edu.mindhub.homebanking.models;
 
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -12,7 +15,11 @@ import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
-public class Account{
+@Table(name = "account")
+@SQLDelete(sql = "UPDATE account SET deleted = true WHERE id = ?")
+@FilterDef(name = "deletedAccount", parameters = @ParamDef(name = "deleted", type = "boolean"))
+@Filter(name = "deletedAccount", condition = "deleted = :deleted")
+public class Account {
 
     @Id
     @GeneratedValue(strategy = AUTO, generator = "native")
@@ -25,6 +32,9 @@ public class Account{
     private LocalDateTime creationDate;
 
     private double balance;
+
+    @Column(name = "deleted")
+    private Boolean deleted;
 
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name="client_id")
@@ -41,6 +51,7 @@ public class Account{
         this.number = number;
         this.creationDate = creationDate;
         this.balance = balance;
+        this.deleted = false;
     }
 
     public void addTransaction(Transaction transaction) {
@@ -88,10 +99,16 @@ public class Account{
         return transactions;
     }
 
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
     @Override
     public String toString() {
         return "Account:" +
                 "id=" + id +
                 ", number=" + number + '\'';
     }
+
+
 }

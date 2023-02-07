@@ -16,21 +16,21 @@ const app = createApp({
         }
     },
     created() {
-        if(this.logout != null){
+        if (this.logout != null) {
             Toastify({
-                text: "Logout has been successfully",
-                duration: 5000,
+                text: "Logut has been sucessfully",
+                duration: 1000,
                 close: true,
                 gravity: "top",
                 position: "center",
                 stopOnFocus: true,
                 style: {
-                  background: "linear-gradient(to right, #64d11b, #23c072)",
-                  "border-radius": "10px"
+                    background: "linear-gradient(to right, #64d11b, #23c072)",
+                    "border-radius": "10px"
                 },
             }).showToast();
         }
-        if(this.error != null){
+        if (this.error != null) {
             Toastify({
                 text: "Error trying to login",
                 duration: 5000,
@@ -39,8 +39,8 @@ const app = createApp({
                 position: "center",
                 stopOnFocus: true,
                 style: {
-                  background: "linear-gradient(to right, #d11b1b, #ec6464)",
-                  "border-radius": "10px"
+                    background: "linear-gradient(to right, #d11b1b, #ec6464)",
+                    "border-radius": "10px"
                 },
             }).showToast();
         }
@@ -60,43 +60,43 @@ const app = createApp({
 
     },
     methods: {
-        signIn(){
+        signIn() {
             axios.post('/api/login',
-            "email=" + this.signInEmail +
-            "&password=" + this.signInPassword)
-            .then(response => {
-                console.log(response);
-                location.href=response.request.responseURL
-            })
-            .catch(error => console.log(error))
-        },
-        signUp(){
-            axios.post('/api/clients',
-            "firstName=" + this.signUpFirstName + 
-            "&lastName=" + this.signUpLastName +
-            "&email=" + this.signUpEmail +
-            "&password=" + this.signUpPassword)
-            .then(response =>  {
-                console.log(response.data);
-                Toastify({
-                    text: "Account created successfully",
-                    duration: 5000,
-                    close: true,
-                    gravity: "top",
-                    position: "center",
-                    stopOnFocus: true,
-                    style: {
-                      background: "linear-gradient(to right, #64d11b, #23c072)",
-                      "border-radius": "10px"
-                    },
-                }).showToast();
-                axios.post('/api/login',"email=" + this.signUpEmail + "&password=" + this.signUpPassword)
+                "email=" + this.signInEmail +
+                "&password=" + this.signInPassword)
                 .then(response => {
-                    window.location.href="/web/accounts.html"
+                    console.log(response);
+                    location.href = response.request.responseURL
                 })
                 .catch(error => console.log(error))
-            })
-            .catch(error => console.log(error.response.data))
+        },
+        signUp() {
+            axios.post('/api/clients',
+                "firstName=" + this.signUpFirstName +
+                "&lastName=" + this.signUpLastName +
+                "&email=" + this.signUpEmail +
+                "&password=" + this.signUpPassword)
+                .then(response => {
+                    console.log(response.data);
+                    Toastify({
+                        text: "Account created successfully",
+                        duration: 5000,
+                        close: true,
+                        gravity: "top",
+                        position: "center",
+                        stopOnFocus: true,
+                        style: {
+                            background: "linear-gradient(to right, #64d11b, #23c072)",
+                            "border-radius": "10px"
+                        },
+                    }).showToast();
+                    axios.post('/api/login', "email=" + this.signUpEmail + "&password=" + this.signUpPassword)
+                        .then(response => {
+                            window.location.href = "/web/accounts.html"
+                        })
+                        .catch(error => console.log(error))
+                })
+                .catch(error => console.log(error.response.data))
         },
     },
     computed: {

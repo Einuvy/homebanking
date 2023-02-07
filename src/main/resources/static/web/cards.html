@@ -61,6 +61,12 @@
                                     </a>
                                 </li>
 
+                                <li class="nav-link">
+                                    <a href="./loan-application.html">
+                                        <i class="bi bi-coin icon"></i>
+                                        <span class="text nav-text">Loan Application</span>
+                                    </a>
+                                </li>
 
                             </ul>
                         </div>
@@ -189,6 +195,12 @@
                                                             </p> -->
                                                         </div>
                                                     </div>
+                                                    
+                                                </div>
+                                                <div class="align-self-center">
+                                                    <button class="btn btn-warning" @click="deleteCard(card.number)">Delete
+                                                        <i class="bi bi-x-circle delete_account"></i>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -262,6 +274,12 @@
                                                                 </p> -->
                                                             </div>
                                                         </div>
+                                                        
+                                                    </div>
+                                                    <div class="align-self-center">
+                                                        <button class="btn btn-warning" @click="deleteCard(card.number)">Delete
+                                                            <i class="bi bi-x-circle delete_account"></i>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -269,7 +287,11 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <a @click="sweetModal">
+                                <button class="mx-2 btn btn-primary mb-3">
+                                    Create Cards
+                                </button>
+                            </a>
                         </div>
                 </section>
             </aside>

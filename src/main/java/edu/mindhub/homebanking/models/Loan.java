@@ -1,8 +1,10 @@
 package edu.mindhub.homebanking.models;
 
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,6 +15,10 @@ import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
+@Table(name = "loan")
+@SQLDelete(sql = "UPDATE loan SET deleted = true WHERE id = ?")
+@FilterDef(name = "deletedLoan", parameters = @ParamDef(name = "deleted", type = "boolean"))
+@Filter(name = "deletedLoan", condition = "deleted = :deleted")
 public class Loan {
 
     @Id
@@ -22,6 +28,11 @@ public class Loan {
 
     private String name;
     private double maxAmount;
+
+    private int percentaje;
+
+    @Column(name = "deleted")
+    private Boolean deleted;
 
     @ElementCollection
     private List<Integer> payments = new ArrayList<>();
@@ -34,10 +45,13 @@ public class Loan {
 
     public Loan(String name,
                 double maxAmount,
-                List<Integer> payments) {
+                List<Integer> payments,
+                int percentaje) {
         this.name = name;
         this.maxAmount = maxAmount;
         this.payments = payments;
+        this.percentaje = percentaje;
+        this.deleted = false;
     }
 
     public void addClientLoan(ClientLoan clientLoan) {
@@ -76,4 +90,11 @@ public class Loan {
         return clientLoans;
     }
 
+    public int getPercentaje() {
+        return percentaje;
+    }
+
+    public void setPercentaje(int percentaje) {
+        this.percentaje = percentaje;
+    }
 }

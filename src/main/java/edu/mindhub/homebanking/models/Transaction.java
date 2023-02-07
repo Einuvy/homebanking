@@ -1,15 +1,23 @@
 package edu.mindhub.homebanking.models;
 
 import edu.mindhub.homebanking.enums.TransactionType;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
+@Table(name = "transaction")
+@SQLDelete(sql = "UPDATE transaction SET deleted = true WHERE id = ?")
+@FilterDef(name = "deletedTransaction", parameters = @ParamDef(name = "deleted", type = "boolean"))
+@Filter(name = "deletedTransaction", condition = "deleted = :deleted")
 public class Transaction {
 
     @Id
@@ -17,12 +25,14 @@ public class Transaction {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
+    @Enumerated(value = STRING)
     private TransactionType type;
     private double amount;
     private String description;
     private LocalDateTime date;
 
-
+    @Column(name = "deleted")
+    private Boolean deleted;
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name="account_id")
     private Account account;
@@ -40,6 +50,7 @@ public class Transaction {
         this.description = description;
         this.date = date;
         this.account = account;
+        this.deleted = false;
     }
 
     public long getId() {

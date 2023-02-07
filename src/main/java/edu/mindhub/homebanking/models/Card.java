@@ -2,19 +2,29 @@ package edu.mindhub.homebanking.models;
 
 import edu.mindhub.homebanking.enums.CardColor;
 import edu.mindhub.homebanking.enums.CardType;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.Getter;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 import java.time.LocalDateTime;
 
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
+@Table(name = "card")
+@SQLDelete(sql = "UPDATE card SET deleted = true WHERE id = ?")
+@FilterDef(name = "deletedCard", parameters = @ParamDef(name = "deleted", type = "boolean"))
+@Filter(name = "deletedCard", condition = "deleted = :deleted")
 public class Card {
     @Id
-    @GeneratedValue(strategy = AUTO, generator = "native")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @Column(nullable = false)
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
@@ -22,10 +32,13 @@ public class Card {
     @JoinColumn(name = "card_holder_id")
     private Client cardHolder;
 
+    @Enumerated(value = STRING)
     private CardType type;
 
+    @Enumerated(value = STRING)
     private CardColor color;
 
+    @Column(unique = true)
     private String number;
 
     private int cvv;
@@ -33,6 +46,9 @@ public class Card {
     private LocalDateTime thruDate;
 
     private LocalDateTime fromDate;
+
+    @Column(name = "deleted")
+    private Boolean deleted;
 
     public Card() {
     }
@@ -49,6 +65,7 @@ public class Card {
         this.cvv = cvv;
         this.fromDate = fromDate;
         this.thruDate = thruDate;
+        this.deleted = false;
     }
 
     public long getId() {
@@ -111,5 +128,7 @@ public class Card {
         this.fromDate = fromDate;
     }
 
-
+    public Boolean getDeleted() {
+        return deleted;
+    }
 }
